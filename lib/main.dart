@@ -13,11 +13,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: Colors.green,
+      theme: ThemeData(scaffoldBackgroundColor: const Color.fromARGB(255, 81, 154, 83),
       appBarTheme: AppBarTheme(color: Colors.white)),
       routes: {
         '/login':(context) => Login(),
-        '/sign':(context) => Sign(),
+        '/signup':(context) => Sign(),
       },
       home: MainScreen(),
     );

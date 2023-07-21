@@ -84,7 +84,7 @@ class _LoginState extends State<Login> {
             children: [
             Text('Don\'t have an account ?', style: TextStyle(fontSize: 16.0)),
             TextButton(onPressed: (){
-              Navigator.pushNamed(context, '/sign');
+              Navigator.pushNamed(context, '/signup');
             }, 
             child:Text('Create Account', style: TextStyle(color: Colors.white, fontSize: 16.0),),
             ) 
