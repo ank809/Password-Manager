@@ -18,7 +18,16 @@ class _LoginState extends State<Login> {
         child: SafeArea(
           child: Column(
             children: [
-              Image.asset('Asset/images/white.png'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    alignment: Alignment.topRight,
+                    height: 200,
+                    width: 200.0,
+                    child: Image.asset('Asset/images/white1.png', )),
+                ],
+              ),
               Center(child: Text('Welcome back !', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 40.0),),),
               SizedBox(height: 60.0,),
               Container(
