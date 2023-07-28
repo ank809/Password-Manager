@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
                     Text('Sign In', style: buttonStyle2),
                     SizedBox(width: 8.0,),
                     ElevatedButton(onPressed: (){
-                      Navigator.pushNamed(context, '/signup');
+                      Navigator.pushNamed(context, '/home');
                     }, 
                     child:Icon(Icons.arrow_forward, color: Colors.black,),
                     style:ElevatedButton.styleFrom(

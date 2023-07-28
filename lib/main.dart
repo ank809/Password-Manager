@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:password_manager/add_password_page.dart';
 import 'package:password_manager/login.dart';
 import 'package:password_manager/mainScreen.dart';
 import 'package:password_manager/signup.dart';
+import 'package:password_manager/home.dart';
+
 void main(){
   runApp(MyApp());
 }
@@ -18,6 +21,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login':(context) => Login(),
         '/signup':(context) => Sign(),
+        '/home':(context) => Home(),
+        '/password':(context) => AddPasswordPage()
       },
       home: MainScreen(),
     );
