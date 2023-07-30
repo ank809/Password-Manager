@@ -83,6 +83,7 @@ class _PasswordFieldsState extends State<PasswordFields> {
       titleController.clear();
       emailController.clear();
       passwordController.clear();
+      Navigator.pop(context);
     } catch (e) {
       // Show an error message if something goes wrong
       ScaffoldMessenger.of(context).showSnackBar(

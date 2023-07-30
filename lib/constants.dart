@@ -9,3 +9,5 @@ const buttonStyle1=TextStyle(color: Color.fromARGB(255, 227, 216, 216), fontWeig
                                     fontSize: 18.0);
 const buttonStyle=TextStyle(color: Colors.green,
               fontSize: 18.0);
+const titlestyle=TextStyle(fontWeight: FontWeight.bold, fontSize: 22.0);
+const usernamestyle=TextStyle(fontSize: 18.0);
