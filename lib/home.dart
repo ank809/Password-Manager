@@ -50,16 +50,35 @@ class _HomeState extends State<Home> {
                           docs[index]['title'],
                           style: titlestyle,
                         ),
-                        SizedBox(height: 4.0),
+                        SizedBox(height: 15.0),
                         Text(
                           docs[index]['username'],
                           style: usernamestyle,
                         ),
-                        SizedBox(height: 4.0),
+                        SizedBox(height: 15.0),
                         Text(
                           docs[index]['password'], 
                           style:usernamestyle,
                         ), 
+                        SizedBox(height: 15.0,),
+                         Row(
+                          children:[
+                          GestureDetector(
+                            child:Icon(Icons.edit, color: Colors.blue,),
+                           onTap: () {
+                             // Edit operation is performed here
+                             Navigator.pushNamed(context, '/password');
+                           },
+                          ),
+                          SizedBox(width: 16.0,),
+                        GestureDetector(
+                          child: Icon(Icons.delete, color: Colors.red,),
+                          onTap: () {
+                            // Delete operation is performed
+                          },
+                        )
+                          ],
+                        ),
                       ],
                     ),
               
