@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:password_manager/constants.dart';
+import 'package:password_manager/update.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,6 +12,20 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final userstream = FirebaseFirestore.instance.collection('passwords').snapshots();
+
+ void editData(String documentId, String title, String username, String password) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => UpdateData(
+          docID: documentId,
+          title: title,
+          email: username,
+          password: password,
+        ),
+      ),
+    );
+  }
 
 @override
   Widget build(BuildContext context) {
@@ -66,9 +81,12 @@ class _HomeState extends State<Home> {
                           GestureDetector(
                             child:Icon(Icons.edit, color: Colors.blue,),
                            onTap: () {
-                             // Edit operation is performed here
-                             Navigator.pushNamed(context, '/password');
-                           },
+                            editData(
+                              docs[index].id,
+                               docs[index]['title'], 
+                               docs[index]['username'],
+                              docs[index]['password']);
+                           }
                           ),
                           SizedBox(width: 16.0,),
                         GestureDetector(

@@ -19,12 +19,16 @@ class AddPasswordPage extends StatelessWidget {
     );
   }
 }
-
 class PasswordFields extends StatefulWidget {
+  String ?id;
   final String title;
   final String username;
   final String password;
-  PasswordFields({this.title = '', this.username = '', this.password = ''});
+
+  PasswordFields({this.title = '', 
+  this.username = '', 
+  this.password = '',
+   this.id=''});
 
   @override
   State<PasswordFields> createState() => _PasswordFieldsState();
@@ -68,10 +72,10 @@ class _PasswordFieldsState extends State<PasswordFields> {
     };
 
     try {
-      // Get a reference to the Firestore collection where you want to store the data
+      //  reference to the Firestore collection where you want to store the data
       final collectionRef = FirebaseFirestore.instance.collection('passwords');
 
-      // Add the data to Firestore
+      // Add data to Firestore
       await collectionRef.add(jsonData);
 
       // Show a success message
@@ -91,7 +95,6 @@ class _PasswordFieldsState extends State<PasswordFields> {
       );
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Container(
