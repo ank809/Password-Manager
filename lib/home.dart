@@ -26,6 +26,11 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+  // Delete data from firebase 
+  void DeleteData(String documentID,String title, String username, String password){
+    var collectionRef = FirebaseFirestore.instance.collection('passwords');
+    final docref= collectionRef.doc(documentID).delete();
+  }
 
 @override
   Widget build(BuildContext context) {
@@ -92,7 +97,11 @@ class _HomeState extends State<Home> {
                         GestureDetector(
                           child: Icon(Icons.delete, color: Colors.red,),
                           onTap: () {
-                            // Delete operation is performed
+                           DeleteData(
+                            docs[index].id,
+                            docs[index]['title'],
+                            docs[index]['username'],
+                            docs[index]['password']);
                           },
                         )
                           ],
