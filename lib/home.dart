@@ -30,7 +30,8 @@ class _HomeState extends State<Home> {
   // Delete data from firebase 
   void DeleteData(String documentID,String title, String username, String password){
     var collectionRef = FirebaseFirestore.instance.collection('passwords');
-    final docref= collectionRef.doc(documentID).delete();
+    // final docref= 
+    collectionRef.doc(documentID).delete();
   }
   void _logout() async {
   try {
@@ -186,4 +187,5 @@ class _HomeState extends State<Home> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+  
 }

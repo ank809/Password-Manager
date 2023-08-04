@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:password_manager/constants.dart';
 
@@ -11,6 +12,12 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController= TextEditingController();
+  bool isobscureText=true;
+  void toggleobscure(){
+    setState(() {
+      isobscureText=!isobscureText;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,6 +56,7 @@ class _LoginState extends State<Login> {
                 padding: EdgeInsets.all(10.0),
                 margin: EdgeInsets.only(left: 22.0, right: 22.0),
                 child: TextFormField(
+                  obscureText: isobscureText,
                   controller: _passwordController,
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.lock),
@@ -56,7 +64,10 @@ class _LoginState extends State<Login> {
                     fillColor: Colors.white,
                     filled: true,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
-                    suffixIcon:Icon(Icons.remove_red_eye),
+                    suffixIcon: IconButton(
+                      icon:Icon(isobscureText? Icons.visibility: Icons.visibility_off,),
+                    onPressed: toggleobscure,
+                    ),
                   ),
                 ),
               ),
@@ -76,8 +87,20 @@ class _LoginState extends State<Login> {
               children: [
                     Text('Sign In', style: buttonStyle2),
                     SizedBox(width: 8.0,),
-                    ElevatedButton(onPressed: (){
-                      Navigator.pushNamed(context, '/home');
+                    ElevatedButton(
+                      onPressed: (){
+                      if(_emailController.text.isNotEmpty && _passwordController.text.length>8){
+                          login();
+                          ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
+                       content: Text('Successfully logged in')),
+                       );
+                       
+
+                      }
+                      else{
+                      ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
+                       content: Text('Password length is smaller than 8 or email is not correct')));
+                      }
                     }, 
                     child:Icon(Icons.arrow_forward, color: Colors.black,),
                     style:ElevatedButton.styleFrom(
@@ -106,5 +129,12 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+  Future<void> login() async{
+    final auth= FirebaseAuth.instance;
+    auth.signInWithEmailAndPassword(email: _emailController.text,
+     password: _passwordController.text);
+     Navigator.pushNamed(context, '/home');
+
   }
 }

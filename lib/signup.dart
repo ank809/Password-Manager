@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:password_manager/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:email_validator/email_validator.dart';
 
 
 class Sign extends StatefulWidget {
@@ -10,6 +11,16 @@ class Sign extends StatefulWidget {
 }
 
 class _SignState extends State<Sign> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController= TextEditingController();
+  TextEditingController _nameController= TextEditingController();
+      bool isPasswordvisible=true;
+      void togglevisibility(){
+        setState(() {
+          isPasswordvisible= !isPasswordvisible;
+        });
+      }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder <User?> (
@@ -39,7 +50,7 @@ class _SignState extends State<Sign> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 40.0),
-              Text(
+              const Text(
                 'Create an Account with',
                 style: TextStyle(
                   fontSize: 20.0,
@@ -83,30 +94,51 @@ class _SignState extends State<Sign> {
               ),
               SizedBox(height: 30.0),
               TextFormField(
+                controller: _nameController,
                 decoration: const InputDecoration(
                   focusedBorder: OutlineInputBorder(),
                   fillColor: Colors.white,
                   filled: true,
-                  hintText: 'Enter your first name',
+                  hintText: 'Enter your  name',
                 ),
               ),
               SizedBox(height: 30.0),
               TextFormField(
+                controller: _emailController,
                 decoration:const  InputDecoration(
-                  focusedBorder: OutlineInputBorder(),
-                  fillColor: Colors.white,
-                  filled: true,
-                  hintText: 'Enter your last name',
-                ),
-              ),
-              SizedBox(height: 30.0),
-              TextFormField(
-                decoration: const InputDecoration(
                   focusedBorder: OutlineInputBorder(),
                   fillColor: Colors.white,
                   filled: true,
                   hintText: 'Enter your email',
                 ),
+                validator: (value){
+                  if (!EmailValidator.validate(value!)) {
+                    return 'Invalid email format';
+                     }
+                        return null;
+                },
+              ),
+              SizedBox(height: 30.0),
+              TextFormField(
+                obscureText: isPasswordvisible,
+                controller: _passwordController,
+                decoration:  InputDecoration(
+                  focusedBorder: OutlineInputBorder(),
+                  fillColor: Colors.white,
+                  filled: true,
+                  hintText: 'Enter your password',
+                  suffixIcon: GestureDetector(
+                    onTap: () => togglevisibility(),
+                    child: Icon( isPasswordvisible? Icons.visibility: Icons.visibility_off,
+                  ) ,
+                  ),
+                ),
+                validator: (value) {
+                  if(value!.length<8){
+                    return 'Password length should be greater than 8';
+                  }
+                  return null;
+                 },
               ),
               SizedBox(height: 70.0),
               Column(
@@ -114,7 +146,10 @@ class _SignState extends State<Sign> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // Handle create account action
+                      final auth= FirebaseAuth.instance;
+                      auth.createUserWithEmailAndPassword(
+                        email: _emailController.text, password: _passwordController.text
+                        );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color.fromARGB(255, 233, 226, 226),
