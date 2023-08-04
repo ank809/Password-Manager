@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       appBarTheme: AppBarTheme(color: Colors.white)),
       routes: {
         '/login':(context) => Login(),
-        '/signup':(context) => Sign(),
+        '/signup':(context) => Signup(),
         '/home':(context) => Home(),
         '/password':(context) => AddPasswordPage()
       },

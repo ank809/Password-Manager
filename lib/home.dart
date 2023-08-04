@@ -109,7 +109,7 @@ class _HomeState extends State<Home> {
               return const Text('Error in reading data');
             }
             if(snapshot.connectionState == ConnectionState.waiting){
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator(),);
             }
             if(!snapshot.hasData || snapshot.data==null){
               return Text('No data found');

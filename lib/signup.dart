@@ -1,184 +1,199 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:password_manager/home.dart';
+// import 'package:password_manager/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:email_validator/email_validator.dart';
 
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
-class Sign extends StatefulWidget {
   @override
-  State<Sign> createState() => _SignState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _SignState extends State<Sign> {
+class _SignupState extends State<Signup> {
   TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController= TextEditingController();
-  TextEditingController _nameController= TextEditingController();
-      bool isPasswordvisible=true;
-      void togglevisibility(){
-        setState(() {
-          isPasswordvisible= !isPasswordvisible;
-        });
-      }
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  bool isPasswordVisible = true;
+
+  void toggleVisibility() {
+    setState(() {
+      isPasswordVisible = !isPasswordVisible;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder <User?> (
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder:(context, snapshot){
-           if (snapshot.hasData) {
-          return Home();
-        }
-      else{
-        return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Create Account',
-          style: TextStyle(
-            fontSize: 28.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.green,
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue.shade400, Colors.green.shade400],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
         ),
-        centerTitle: true,
-        backgroundColor: Color.fromARGB(255, 233, 226, 226),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 40.0),
-              const Text(
-                'Create an Account with',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-              SizedBox(height: 30.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconContainer(
-                    onPressed: () {
-                      signInwithGoogle();
-                    },
-                    imagePath: 'Asset/images/google3.png',
-                    iconSize: 75.0,
-                  ),
-                  SizedBox(width: 20.0),
-                  IconContainer(
-                    onPressed: () {
-                      // Handle Facebook login
-                    },
-                    imagePath: 'Asset/images/facebook1.png',
-                    iconSize: 80.0,
-                  ),
-                  SizedBox(width: 20.0),
-                  IconContainer(
-                    onPressed: () {
-                      // Handle Twitter login
-                    },
-                    imagePath: 'Asset/images/twitter2.png',
-                    iconSize: 100.0,
-                  ),
-                ],
-              ),
-              SizedBox(height: 50.0),
-              const Text(
-                '-- Or create your account with --',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
-              ),
-              SizedBox(height: 30.0),
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  focusedBorder: OutlineInputBorder(),
-                  fillColor: Colors.white,
-                  filled: true,
-                  hintText: 'Enter your  name',
-                ),
-              ),
-              SizedBox(height: 30.0),
-              TextFormField(
-                controller: _emailController,
-                decoration:const  InputDecoration(
-                  focusedBorder: OutlineInputBorder(),
-                  fillColor: Colors.white,
-                  filled: true,
-                  hintText: 'Enter your email',
-                ),
-                validator: (value){
-                  if (!EmailValidator.validate(value!)) {
-                    return 'Invalid email format';
-                     }
-                        return null;
-                },
-              ),
-              SizedBox(height: 30.0),
-              TextFormField(
-                obscureText: isPasswordvisible,
-                controller: _passwordController,
-                decoration:  InputDecoration(
-                  focusedBorder: OutlineInputBorder(),
-                  fillColor: Colors.white,
-                  filled: true,
-                  hintText: 'Enter your password',
-                  suffixIcon: GestureDetector(
-                    onTap: () => togglevisibility(),
-                    child: Icon( isPasswordvisible? Icons.visibility: Icons.visibility_off,
-                  ) ,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all( 30.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Create Account',
+                  style: TextStyle(
+                    fontSize: 40.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                validator: (value) {
-                  if(value!.length<8){
-                    return 'Password length should be greater than 8';
-                  }
-                  return null;
-                 },
-              ),
-              SizedBox(height: 70.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      final auth= FirebaseAuth.instance;
+                SizedBox(height: 60.0),
+                TextFormField(
+                  controller: _nameController,
+                  keyboardType: TextInputType.text,
+                  decoration: const  InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelText: 'Enter your name',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    prefixIcon: Icon(Icons.person_2, size: 30.0),
+                    prefixIconColor: Colors.green,
+                  ),
+                ),
+                SizedBox(height: 30.0),
+                TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelText: 'Enter your email',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    prefixIcon: Icon(Icons.email, size: 30.0),
+                    prefixIconColor: Colors.green,
+                  ),
+                  validator: (value) {
+                    if(value!.isEmpty){
+                      return 'Please enter a email';
+                    }
+                  },
+                ),
+                SizedBox(height: 30.0),
+                TextFormField(
+                  controller: _passwordController,
+                  keyboardType: TextInputType.numberWithOptions(),
+                  obscureText: isPasswordVisible,
+                  decoration: InputDecoration(
+                    focusedBorder:const  OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    labelText: 'Enter your password',
+                    labelStyle:const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    prefixIcon: Icon(Icons.lock, size: 30.0),
+                    prefixIconColor: Colors.green,
+                    suffixIcon: IconButton(
+                      icon: Icon(isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: toggleVisibility,
+                    ),
+                  ),
+                  validator: (value) {
+                    if(value!.length<8){
+                      return 'Please enter 8 digit long password';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 50.0),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.green,
+                    backgroundColor: Colors.white,
+                    minimumSize: Size(300.0, 50.0),
+                  ),
+                  onPressed: () {
+                    if(_passwordController.text.isNotEmpty && _passwordController.text.length>=8){
+                       final auth= FirebaseAuth.instance;
                       auth.createUserWithEmailAndPassword(
-                        email: _emailController.text, password: _passwordController.text
+                        email: _emailController.text, 
+                        password: _passwordController.text
                         );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 233, 226, 226),
-                    ),
-                    child: const Text(
-                      'Create Account',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22.0,
-                      ),
+                    }
+                    else {
+           ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Please fix the errors in the form')),
+          );
+          Navigator.pushNamed(context, '/home');
+        }
+                  },
+                  child: const Text(
+                    'Sign Up',
+                    style: TextStyle(fontSize: 20.0),)),
+                    SizedBox(height: 30.0,),
+                const Center(
+                  child: Text(
+                    '-- Or create your account with --',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white,
                     ),
                   ),
-                ],
-              ),
-            ],
+                ),
+                SizedBox(height: 30.0),
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.green,
+                     backgroundColor: Colors.white,
+                    minimumSize: Size(300.0, 50.0),
+                  ),
+                  onPressed: () {
+                    signInwithGoogle();
+                  },
+                  icon: Image.asset(
+                    'Asset/images/google.png',
+                    width: 45.0,
+                    height: 45.0,
+                  ),
+                  label: const Text(
+                    'Continue with Google',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    );
-    }
-        },
     );
   }
+
   Future<void> signInwithGoogle() async {
   try {
     GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     if (googleUser == null) {
-      // User canceled the sign-in process
       return;
     }
     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
@@ -195,32 +210,6 @@ class _SignState extends State<Sign> {
     print(user?.displayName);
   } catch (e) {
     print('Error logging in: $e');
-    // Handle the error or show a friendly message to the user
   }
 }
-}
-
-
-class IconContainer extends StatelessWidget {
-  final VoidCallback onPressed;
-  final String imagePath;
-  final double iconSize;
-
-  IconContainer({
-    required this.onPressed,
-    required this.imagePath,
-    required this.iconSize,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: iconSize,
-      height: iconSize,
-      child: IconButton(
-        onPressed: onPressed,
-        icon: Image.asset(imagePath),
-      ),
-    );
-  }
 }

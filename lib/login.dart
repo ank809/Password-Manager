@@ -21,9 +21,17 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue.shade400, Colors.green.shade400],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -128,6 +136,7 @@ class _LoginState extends State<Login> {
               ),
         ),
       ),
+    ),
     );
   }
   Future<void> login() async{
