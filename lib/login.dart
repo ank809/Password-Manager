@@ -102,13 +102,11 @@ class _LoginState extends State<Login> {
                           ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
                        content: Text('Successfully logged in')),
                        );
-                       
-
                       }
-                      else{
-                      ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
-                       content: Text('Password length is smaller than 8 or email is not correct')));
-                      }
+                      // else{
+                      // ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
+                      //  content: Text('Password length is smaller than 8 or email is not correct')));
+                      // }
                     }, 
                     child:Icon(Icons.arrow_forward, color: Colors.black,),
                     style:ElevatedButton.styleFrom(
@@ -139,11 +137,49 @@ class _LoginState extends State<Login> {
     ),
     );
   }
-  Future<void> login() async{
-    final auth= FirebaseAuth.instance;
-    auth.signInWithEmailAndPassword(email: _emailController.text,
-     password: _passwordController.text);
-     Navigator.pushNamed(context, '/home');
+  Future<void> login() async {
+  try {
+    final auth = FirebaseAuth.instance;
+    await auth.signInWithEmailAndPassword(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+    Navigator.pushNamed(context, '/home');
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'wrong-password') {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Invalid Password. Please try again'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else if (e.code == 'user-not-found') {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('User not found. Please check your email and try again.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } 
+  } 
+}
 
-  }
 }

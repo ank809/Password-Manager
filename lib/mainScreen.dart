@@ -53,8 +53,8 @@ class MainScreen extends StatelessWidget {
                           Navigator.pushNamed(context, '/signup');
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 187, 214, 237)),
-                        child: const Text('Create Account', style: TextStyle(fontSize: 18.0, color: Colors.green),),
+                          backgroundColor: Color.fromARGB(255, 130, 166, 184)),
+                        child: const Text('Create Account', style: TextStyle(fontSize: 18.0, color: Colors.white,),),
                       ),
                     ],
                   ),
