@@ -27,7 +27,17 @@ class MyApp extends StatelessWidget {
         '/home':(context) => Home(),
         '/password':(context) => AddPasswordPage()
       },
-      home: MainScreen(),
+      home: FutureBuilder(
+        future: Firebase.initializeApp(),
+        builder: ((context, snapshot) {
+        if(snapshot.connectionState== ConnectionState.done){
+          return MainScreen();
+        }
+        else{
+          return const Center(child: CircularProgressIndicator(),);
+        }
+      })
+    )
     );
     }
   }
