@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:password_manager/add_password_page.dart';
 import 'package:password_manager/login.dart';
 import 'package:password_manager/mainScreen.dart';
+import 'package:password_manager/reset_password.dart';
 import 'package:password_manager/signup.dart';
 import 'package:password_manager/home.dart';
 
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
         '/login':(context) => Login(),
         '/signup':(context) => Signup(),
         '/home':(context) => Home(),
-        '/password':(context) => AddPasswordPage()
+        '/password':(context) => AddPasswordPage(),
+        '/reset':(context) => ResetPassword()
       },
       home: FutureBuilder(
         future: Firebase.initializeApp(),

@@ -51,7 +51,7 @@ class _LoginState extends State<Login> {
                 child: TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.email),
+                    prefixIcon: Icon(Icons.email, color: Colors.green,size: 28.0,),
                     hintText: 'Enter your username or email',
                     fillColor: Colors.white,
                     filled: true,
@@ -67,7 +67,7 @@ class _LoginState extends State<Login> {
                   obscureText: isobscureText,
                   controller: _passwordController,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.lock),
+                    prefixIcon: Icon(Icons.lock, color: Colors.green, size: 30.0,),
                     hintText: 'Enter your password',
                     fillColor: Colors.white,
                     filled: true,
@@ -82,7 +82,9 @@ class _LoginState extends State<Login> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                TextButton(onPressed: (){}, 
+                TextButton(onPressed: (){
+                  Navigator.pushNamed(context, '/reset');
+                }, 
                 child: Text('Forget Password?', style: buttonStyle1,)),
                 SizedBox(height: 18.0,),
             ],
@@ -97,16 +99,7 @@ class _LoginState extends State<Login> {
                     SizedBox(width: 8.0,),
                     ElevatedButton(
                       onPressed: (){
-                      if(_emailController.text.isNotEmpty && _passwordController.text.length>8){
                           login();
-                          ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
-                       content: Text('Successfully logged in')),
-                       );
-                      }
-                      // else{
-                      // ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
-                      //  content: Text('Password length is smaller than 8 or email is not correct')));
-                      // }
                     }, 
                     child:Icon(Icons.arrow_forward, color: Colors.black,),
                     style:ElevatedButton.styleFrom(
@@ -145,6 +138,8 @@ class _LoginState extends State<Login> {
       password: _passwordController.text,
     );
     Navigator.pushNamed(context, '/home');
+    ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
+                       content: Text('Successfully logged in')));
   } on FirebaseAuthException catch (e) {
     if (e.code == 'wrong-password') {
       showDialog(
@@ -181,5 +176,6 @@ class _LoginState extends State<Login> {
     } 
   } 
 }
+
 
 }

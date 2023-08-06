@@ -26,17 +26,6 @@ class _SignupState extends State<Signup> {
     });
   }
 
-  // Function to manually validate the email
-  // String? validateEmail(String? value) {
-  //   if (value!.isEmpty) {
-  //     return 'Please enter an email';
-  //   }
-  //   if (!EmailValidator.validate(value)) {
-  //     return 'Please enter a valid email';
-  //   }
-  //   return null;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,7 +147,8 @@ class _SignupState extends State<Signup> {
                           return 'Please enter a password';
                         }
                         if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*]).{8,}$').hasMatch(value)){
-                    return 'Password must be at least 8 characters long and contain special characters';
+                    return 'Password must be 8 characters with upper, lower, number, and special char';
+                    
                         }
                         return null;
                       },
