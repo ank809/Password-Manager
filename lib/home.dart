@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:password_manager/constants.dart';
+import 'package:password_manager/drawer.dart';
 import 'package:password_manager/update.dart';
 
 class Home extends StatefulWidget {
@@ -33,15 +34,6 @@ class _HomeState extends State<Home> {
     // final docref= 
     collectionRef.doc(documentID).delete();
   }
-  void _logout() async {
-  try {
-    await FirebaseAuth.instance.signOut();
-  } catch (e) {
-    print('Error while logging out: $e');
-  }
-  Navigator.pushNamed(context, '/login');
-}
-
 
 @override
   Widget build(BuildContext context) {
@@ -53,52 +45,7 @@ class _HomeState extends State<Home> {
         ),
         backgroundColor: Colors.green,
       ),
-      drawer:Drawer(
-        child: SafeArea(
-          child: Container(
-            color: Colors.green, // Set the background color of the drawer
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const CircleAvatar(
-                  radius: 62.0,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.account_circle,
-                    size: 120.0,
-                    color: Colors.green,
-                  ),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height*0.06),
-                const Text(
-                  'Hello, User!',
-                  style: TextStyle(color: Colors.white, fontSize: 30.0),
-                ),
-                SizedBox(height: MediaQuery.of(context).size.height*0.6),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: _logout,
-                      icon: Icon(Icons.logout),
-                      label: Text('Logout', style: TextStyle(fontSize: 22.0),),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.green, 
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      drawer: NavBar(),
 
       body: Container(
         margin: EdgeInsets.all(12.0),
