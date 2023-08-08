@@ -72,7 +72,7 @@ class _NavBarState extends State<NavBar> {
                 style: TextStyle(fontSize: 22.0),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 16, 68, 110), // Customize the button color
+                backgroundColor: const Color.fromARGB(255, 16, 68, 110),
               // foregroundColor: Colors.white, // Customize the text color
               ),
             ),

@@ -80,7 +80,7 @@ class _PasswordFieldsState extends State<PasswordFields> {
 
       // Show a success message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Data saved to Firestore')),
+        SnackBar(content: Text('Data saved ')),
       );
 
       // Clear the fields after successful saving
@@ -98,7 +98,15 @@ class _PasswordFieldsState extends State<PasswordFields> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(20.0),
+      height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue.shade400, Colors.green.shade400],
+            begin: Alignment.topCenter,
+          ),
+          
+        ),
+      padding: EdgeInsets.all(20.0),
       child: Form(
         key: _formKey,
         child: Column(

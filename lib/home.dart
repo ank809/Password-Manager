@@ -48,7 +48,15 @@ class _HomeState extends State<Home> {
       drawer: NavBar(),
 
       body: Container(
-        margin: EdgeInsets.all(12.0),
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue.shade400, Colors.green.shade400],
+            begin: Alignment.topCenter,
+          ),
+          
+        ),
+        padding: EdgeInsets.all(12.0),
         child: StreamBuilder(
           stream: userstream,
           builder: (context, snapshot) {
@@ -127,10 +135,10 @@ class _HomeState extends State<Home> {
         ),
       ),
       floatingActionButton: FloatingActionButton(onPressed: () => Navigator.pushNamed(context, '/password'),
-      child: Icon(Icons.add,
-      color: Colors.green,),
       backgroundColor: Colors.white,
-      shape: CircleBorder(eccentricity:0.0),),
+      shape: CircleBorder(eccentricity:0.0),
+      child: Icon(Icons.add,
+      color: Colors.green,),),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
