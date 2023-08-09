@@ -40,6 +40,7 @@ dependencies:
   firebase_auth: ^4.7.2
   google_sign_in: ^6.1.4
   email_validator: ^2.1.17
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:

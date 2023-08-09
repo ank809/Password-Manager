@@ -6,6 +6,7 @@ import 'package:password_manager/mainScreen.dart';
 import 'package:password_manager/reset_password.dart';
 import 'package:password_manager/signup.dart';
 import 'package:password_manager/home.dart';
+import 'package:get/get.dart';
 
 Future main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,10 +19,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // theme: ThemeData(scaffoldBackgroundColor: const Color.fromARGB(255, 81, 154, 83),
-      // appBarTheme: AppBarTheme(color: Colors.white)),
       routes: {
         '/login':(context) => Login(),
         '/signup':(context) => Signup(),
