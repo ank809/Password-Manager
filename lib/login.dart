@@ -89,6 +89,16 @@ class _LoginState extends State<Login> {
                       onPressed: toggleobscure,
                       ),
                     ),
+                    validator: (value) {
+                        if (value!.isEmpty ) {
+                          return 'Please enter a password';
+                        }
+                        if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*]).{8,}$').hasMatch(value)){
+                    return 'Password must be 8 characters with upper, lower, number, and special char';
+                    
+                        }
+                        return null;
+                      },
                   ),
                     ],
                   ),
@@ -115,8 +125,6 @@ class _LoginState extends State<Login> {
                     ElevatedButton(
                       onPressed: (){
                            login();
-                          Get.snackbar('Success 😀',
-                          'Successfully Logged in');
                           
                       },
                     child:Icon(Icons.arrow_forward, color: Colors.black,),
@@ -149,6 +157,7 @@ class _LoginState extends State<Login> {
     );
   }
   Future<void> login() async {
+    if(formkey.currentState!.validate()){
   try {
     final auth = FirebaseAuth.instance;
     await auth.signInWithEmailAndPassword(
@@ -156,8 +165,8 @@ class _LoginState extends State<Login> {
       password: _passwordController.text,
     );
     Navigator.pushNamed(context, '/home');
-    // ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
-    //                    content: Text('Successfully logged in')));
+    Get.snackbar('Success 😀',
+                          'Successfully Logged in');
     
   } on FirebaseAuthException catch (e) {
     if (e.code == 'wrong-password') {
@@ -176,7 +185,8 @@ class _LoginState extends State<Login> {
           ],
         ),
       );
-    } else if (e.code == 'user-not-found') {
+    } 
+  else if (e.code == 'user-not-found') {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -195,6 +205,5 @@ class _LoginState extends State<Login> {
     } 
   } 
 }
-
-
+ }
 }
