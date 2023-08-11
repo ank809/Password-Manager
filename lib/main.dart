@@ -4,6 +4,7 @@ import 'package:password_manager/add_password_page.dart';
 import 'package:password_manager/login.dart';
 import 'package:password_manager/mainScreen.dart';
 import 'package:password_manager/reset_password.dart';
+import 'package:password_manager/security_pin.dart';
 import 'package:password_manager/signup.dart';
 import 'package:password_manager/home.dart';
 import 'package:get/get.dart';
@@ -26,7 +27,8 @@ class MyApp extends StatelessWidget {
         '/signup':(context) => Signup(),
         '/home':(context) => Home(),
         '/password':(context) => AddPasswordPage(),
-        '/reset':(context) => ResetPassword()
+        '/reset':(context) => ResetPassword(),
+        '/mpin':(context)=> Security_Pin()
       },
       home: FutureBuilder(
         future: Firebase.initializeApp(),

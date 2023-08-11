@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:password_manager/security_pin.dart';
 
 class NavBar extends StatefulWidget {
 
@@ -61,6 +62,13 @@ class _NavBarState extends State<NavBar> {
           const ListTile(
             leading: Icon(Icons.settings),
             title: Text('Settings'),
+          ),
+           ListTile(
+            leading: Icon(Icons.password),
+            title: Text('Set Security Pin'),
+            onTap: () {Navigator.pushNamed(context, '/mpin');
+            },
+            
           ),
           SizedBox(height: 40.0,),
           ListTile(
