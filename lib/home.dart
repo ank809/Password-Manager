@@ -14,6 +14,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final userstream = FirebaseFirestore.instance.collection('passwords').snapshots();
+  bool isPasswordVisible=false;
+  String correctPin='1234';
+   Map<String, bool> passwordVisibilityMap = {};
 
  void editData(String documentId, String title, String username, String password) {
     Navigator.push(
@@ -34,7 +37,18 @@ class _HomeState extends State<Home> {
     // final docref= 
     collectionRef.doc(documentID).delete();
   }
-  bool isPasswordVisible=true;
+  void _togglePasswordVisibility(String documentId, BuildContext context) async {
+    final pin = await _showPinDialog(context);
+    if (pin == correctPin) {
+      setState(() {
+          passwordVisibilityMap[documentId] = !(passwordVisibilityMap[documentId] ?? false);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Incorrect PIN')),
+      );
+    }
+  }
 
 
 @override
@@ -98,7 +112,7 @@ class _HomeState extends State<Home> {
                         ),
                         SizedBox(height: 15.0),
                         TextFormField(
-                    obscureText: !isPasswordVisible, // Toggle visibility
+                    obscureText: !(passwordVisibilityMap[docs[index].id] ?? false), // Toggle visibility
                     controller: TextEditingController(text: docs[index]['password']),
                     style: usernamestyle,
                     decoration: InputDecoration(
@@ -107,7 +121,7 @@ class _HomeState extends State<Home> {
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
-                            isPasswordVisible = !isPasswordVisible;
+                             _togglePasswordVisibility(docs[index].id, context);
                           });
                         },
                         icon: Icon(
@@ -164,3 +178,28 @@ class _HomeState extends State<Home> {
   }
   
 }
+ Future<String?> _showPinDialog(BuildContext context) async {
+    TextEditingController pinController = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Enter Security PIN'),
+          content: TextField(
+            controller: pinController,
+            keyboardType: TextInputType.number,
+            obscureText: true,
+            maxLength: 4,
+            decoration: InputDecoration(labelText: 'PIN'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(pinController.text);
+              },
+            ),
+          ],
+        );
+      },);
+ }
