@@ -34,6 +34,8 @@ class _HomeState extends State<Home> {
     // final docref= 
     collectionRef.doc(documentID).delete();
   }
+  bool isPasswordVisible=true;
+
 
 @override
   Widget build(BuildContext context) {
@@ -95,10 +97,28 @@ class _HomeState extends State<Home> {
                           style: usernamestyle,
                         ),
                         SizedBox(height: 15.0),
-                        Text(
-                          docs[index]['password'], 
-                          style:usernamestyle,
-                        ), 
+                        TextFormField(
+                    obscureText: !isPasswordVisible, // Toggle visibility
+                    controller: TextEditingController(text: docs[index]['password']),
+                    style: usernamestyle,
+                    decoration: InputDecoration(
+                       contentPadding: EdgeInsets.zero, // to remove the divider
+                      labelText: 'Password',
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isPasswordVisible = !isPasswordVisible;
+                          });
+                        },
+                        icon: Icon(
+                          isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ), 
                         SizedBox(height: 15.0,),
                          Row(
                           children:[

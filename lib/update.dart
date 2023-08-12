@@ -34,7 +34,17 @@ class _UpdateDataState extends State<UpdateData> {
       child: Scaffold(
         appBar: AppBar(title: Text('Edit Password', style: TextStyle(fontWeight: FontWeight.bold),),
         backgroundColor: Colors.green,),
-        body: SingleChildScrollView( // Wrap the Column with SingleChildScrollView
+        body: 
+        Container(
+      height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue.shade400, Colors.green.shade400],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: SingleChildScrollView( // Wrap the Column with SingleChildScrollView
           child: Container(
             margin: EdgeInsets.all(20.0),
             child: Form(
@@ -86,6 +96,7 @@ class _UpdateDataState extends State<UpdateData> {
           ),
         ),
       ),
+    )
     );
   }
 

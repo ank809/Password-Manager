@@ -8,6 +8,17 @@ class Security_Pin extends StatefulWidget {
 }
 
 class _SecurityPinState extends State<Security_Pin> {
+  TextEditingController _passwordController = TextEditingController();
+  bool isobscureText = true;
+
+  void toggleVisibility() { // Corrected function name
+    setState(() {
+      isobscureText = !isobscureText;
+    });
+  }
+
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +35,8 @@ class _SecurityPinState extends State<Security_Pin> {
         ),
         padding: EdgeInsets.all(30.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-           const Text(
+            const Text(
               'Create a memorable MPIN',
               style: TextStyle(
                 color: Colors.white,
@@ -35,28 +45,40 @@ class _SecurityPinState extends State<Security_Pin> {
               ),
             ),
             SizedBox(height: 20.0),
-           const Text(
-              'Your key to unlocking your account securely. Choose something only you\'d know, ensuring both convenience and protection.',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.black,
+            const Center(
+              child: Text(
+                'Your key to unlocking your account securely. Choose something only you\'d know, ensuring both convenience and protection.',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                ),
               ),
             ),
             SizedBox(height: 30.0),
-            Form(
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Enter your 4-digit MPIN',
-                  labelStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
+            Center(
+              child: Form(
+                key: formKey,
+                child: TextFormField(
+                  obscureText: isobscureText,
+                  controller: _passwordController,
+                  keyboardType: TextInputType.number,
+                  maxLength: 4,
+                  decoration: InputDecoration(
+                    labelText: 'Enter your 4-digit MPIN',
+                    labelStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                    ),
+                    focusedBorder: OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      icon: Icon(isobscureText
+                          ? Icons.visibility
+                          : Icons.visibility_off),color: Colors.white,
+                      onPressed: toggleVisibility, // Corrected function name
+                    ),
                   ),
-                  focusedBorder: OutlineInputBorder(),
+                  style: TextStyle(color: Colors.white, fontSize: 18.0),
                 ),
-                keyboardType: TextInputType.number,
-                obscureText: true,
-                maxLength: 4,
-                style: TextStyle(color: Colors.white, fontSize: 18.0),
               ),
             ),
             SizedBox(height: 25.0),

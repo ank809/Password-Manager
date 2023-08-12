@@ -40,6 +40,12 @@ class _PasswordFieldsState extends State<PasswordFields> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool showProgressIndicator = false;
+  bool isobscure=  true;
+  void hidevisibility(){
+    setState(() {
+      isobscure=!isobscure;
+    });
+  }
 
   @override
   void initState() {
@@ -80,7 +86,7 @@ class _PasswordFieldsState extends State<PasswordFields> {
 
       // Show a success message
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Data saved ')),
+        SnackBar(content: Text('Password saved ')),
       );
 
       // Clear the fields after successful saving
@@ -136,12 +142,14 @@ class _PasswordFieldsState extends State<PasswordFields> {
             const SizedBox(height: 25.0,),
             TextField(
               controller: passwordController,
-              decoration: const InputDecoration(
+              obscureText: isobscure,
+              decoration:  InputDecoration(
                 labelText: 'Enter your password',
-                labelStyle: TextStyle(
+                labelStyle: const TextStyle(
                   color: Colors.black,
                   fontSize: 18.0,
                 ),
+                suffixIcon: IconButton(onPressed: hidevisibility, icon:Icon(isobscure?Icons.visibility:Icons.visibility_off),color: Colors.white,)
               ),
             ),
            const SizedBox(height: 25.0,),
@@ -156,3 +164,4 @@ class _PasswordFieldsState extends State<PasswordFields> {
     );
   }
 }
+
