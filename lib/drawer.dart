@@ -9,6 +9,9 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
+
+    User? user = FirebaseAuth.instance.currentUser;
+
   void _logout()async {
     try{
       await FirebaseAuth.instance.signOut();
@@ -18,22 +21,23 @@ class _NavBarState extends State<NavBar> {
     Navigator.pushNamed(context, '/login');
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return Drawer(
+   return Drawer(
       child: ListView(
         padding: EdgeInsets.all(0.0),
         children: [
-          const UserAccountsDrawerHeader(
+          UserAccountsDrawerHeader(
             accountName: Text(
-              'Ankita',
+              user?.displayName ?? 'User Name', // Use the user's display name if available
               style: TextStyle(fontSize: 23.0),
             ),
             accountEmail: Text(
-              'ankita8091@gmail.com',
+              user?.email ?? 'example@example.com', // Use the user's email if available
               style: TextStyle(fontSize: 18.0),
             ),
-            currentAccountPicture: CircleAvatar(
+            currentAccountPicture: const CircleAvatar(
               backgroundColor: Colors.white,
               child: ClipOval(
                 child: Icon(
