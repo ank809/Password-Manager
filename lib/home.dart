@@ -1,24 +1,25 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:password_manager/constants.dart';
 import 'package:password_manager/drawer.dart';
 import 'package:password_manager/update.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  final userstream = FirebaseFirestore.instance.collection('passwords').snapshots();
-  bool isPasswordVisible=false;
-  String correctPin='1234';
-   Map<String, bool> passwordVisibilityMap = {};
+  final User? userId = FirebaseAuth.instance.currentUser;
+  bool isPasswordVisible = false;
+  String correctPin = '1234';
+  Map<String, bool> passwordVisibilityMap = {};
 
- void editData(String documentId, String title, String username, String password) {
+// This function is used to edit the collection which user has saved 
+  void editData(String documentId, String title, String username, String password) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -31,17 +32,17 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-  // Delete data from firebase 
-  void DeleteData(String documentID,String title, String username, String password){
+  // Used to delete the data 
+  void deleteData(String documentID) {
     var collectionRef = FirebaseFirestore.instance.collection('passwords');
-    // final docref= 
     collectionRef.doc(documentID).delete();
   }
+  // This function is used see the password only when user enters the correct pin
   void _togglePasswordVisibility(String documentId, BuildContext context) async {
     final pin = await _showPinDialog(context);
     if (pin == correctPin) {
       setState(() {
-          passwordVisibilityMap[documentId] = !(passwordVisibilityMap[documentId] ?? false);
+        passwordVisibilityMap[documentId] = !(passwordVisibilityMap[documentId] ?? false);
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -50,8 +51,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +62,6 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.green,
       ),
       drawer: NavBar(),
-
       body: Container(
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
@@ -70,28 +69,29 @@ class _HomeState extends State<Home> {
             colors: [Colors.blue.shade400, Colors.green.shade400],
             begin: Alignment.topCenter,
           ),
-          
         ),
         padding: EdgeInsets.all(12.0),
         child: StreamBuilder(
-          stream: userstream,
+          // Used to get the data of the user who has currently logged in 
+          stream: FirebaseFirestore.instance.collection("passwords").where("userId", isEqualTo: userId?.uid).snapshots(),
           builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text('Error in reading data');
-            }
-            if(snapshot.connectionState == ConnectionState.waiting){
-              return Center(child: CircularProgressIndicator(),);
-            }
-            if(!snapshot.hasData || snapshot.data==null){
-              return Text('No data found');
-            }
+            try {
+              if (snapshot.hasError) {
+                return const Text('Error in reading data');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (!snapshot.hasData || snapshot.data == null) {
+                return Text('No data found');
+              }
 
-            var docs = snapshot.data!.docs;
+              var docs = snapshot.data!.docs;
 
-            return ListView.builder(
-              itemCount: docs.length,
-              itemBuilder: (context, index) {
-                return Container(
+              return ListView.builder(
+                itemCount: docs.length,
+                itemBuilder: (context, index) {
+                  return Container(
                     padding: EdgeInsets.all(16.0),
                     margin: EdgeInsets.symmetric(vertical: 8.0),
                     decoration: BoxDecoration(
@@ -99,7 +99,7 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                     child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           docs[index]['title'],
@@ -112,73 +112,68 @@ class _HomeState extends State<Home> {
                         ),
                         SizedBox(height: 15.0),
                         TextFormField(
-                    obscureText: !(passwordVisibilityMap[docs[index].id] ?? false), // Toggle visibility
-                    controller: TextEditingController(text: docs[index]['password']),
-                    style: usernamestyle,
-                    decoration: InputDecoration(
-                       contentPadding: EdgeInsets.zero, // to remove the divider
-                      labelText: 'Password',
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                             _togglePasswordVisibility(docs[index].id, context);
-                          });
-                        },
-                        icon: Icon(
-                          isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ),
-                  ), 
-                        SizedBox(height: 15.0,),
-                         Row(
-                          children:[
-                          GestureDetector(
-                            child:Icon(Icons.edit, color: Colors.blue,),
-                           onTap: () {
-                            editData(
-                              docs[index].id,
-                               docs[index]['title'], 
-                               docs[index]['username'],
-                              docs[index]['password']);
-                           }
+                          obscureText: !(passwordVisibilityMap[docs[index].id] ?? false),
+                          controller: TextEditingController(text: docs[index]['password']),
+                          style: usernamestyle,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.zero,
+                            labelText: 'Password',
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _togglePasswordVisibility(docs[index].id, context);
+                                });
+                              },
+                              icon: Icon(
+                                isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                                color: Colors.green,
+                              ),
+                            ),
                           ),
-                          SizedBox(width: 16.0,),
-                        GestureDetector(
-                          child: Icon(Icons.delete, color: Colors.red,),
-                          onTap: () {
-                           DeleteData(
-                            docs[index].id,
-                            docs[index]['title'],
-                            docs[index]['username'],
-                            docs[index]['password']);
-                          },
-                        )
+                        ),
+                        SizedBox(height: 15.0),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              child: Icon(Icons.edit, color: Colors.blue),
+                              onTap: () {
+                                editData(docs[index].id, docs[index]['title'], docs[index]['username'], docs[index]['password']);
+                              },
+                            ),
+                            SizedBox(width: 16.0),
+                            GestureDetector(
+                              child: Icon(Icons.delete, color: Colors.red),
+                              onTap: () {
+                                deleteData(docs[index].id);
+                              },
+                            )
                           ],
                         ),
                       ],
                     ),
-              
-                );
-              },
-            );
+                  );
+                },
+              );
+            } catch (e) {
+              return Text('Error: $e');
+            }
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () => Navigator.pushNamed(context, '/password'),
-      backgroundColor: Colors.white,
-      shape: CircleBorder(eccentricity:0.0),
-      child: Icon(Icons.add,
-      color: Colors.green,),),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, '/password'),
+        backgroundColor: Colors.white,
+        shape: const CircleBorder(eccentricity: 0.0),
+        child: const Icon(
+          Icons.add,
+          color: Colors.green,
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
-  
-}
- Future<String?> _showPinDialog(BuildContext context) async {
+  // It is used to show  a dialog box when user tries to see the password
+  Future<String?> _showPinDialog(BuildContext context) async {
     TextEditingController pinController = TextEditingController();
     return showDialog<String>(
       context: context,
@@ -201,5 +196,7 @@ class _HomeState extends State<Home> {
             ),
           ],
         );
-      },);
- }
+      },
+    );
+  }
+}
