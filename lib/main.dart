@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:password_manager/add_password_page.dart';
@@ -9,7 +10,7 @@ import 'package:password_manager/signup.dart';
 import 'package:password_manager/home.dart';
 import 'package:get/get.dart';
 
-Future main() async{
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
@@ -21,26 +22,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/login':(context) => Login(),
-        '/signup':(context) => Signup(),
-        '/home':(context) => Home(),
-        '/password':(context) => AddPasswordPage(), 
-        '/reset':(context) => ResetPassword(),
-        '/mpin':(context)=> Security_Pin()
-      },
-      home: FutureBuilder(
-        future: Firebase.initializeApp(),
-        builder: ((context, snapshot) {
-        if(snapshot.connectionState== ConnectionState.done){
-          return MainScreen();
-        }
-        else{
-          return const Center(child: CircularProgressIndicator(),);
-        }
-      })
-    )
-    );
-    }
+        debugShowCheckedModeBanner: false,
+        routes: {
+          '/login': (context) => const Login(),
+          '/signup': (context) => const Signup(),
+          '/home': (context) => const Home(),
+          '/password': (context) => const AddPasswordPage(),
+          '/reset': (context) => const ResetPassword(),
+          '/mpin': (context) => const Security_Pin()
+        },
+        home: FutureBuilder(
+            future: Firebase.initializeApp(),
+            builder: ((context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return FirebaseAuth.instance.currentUser != null
+                    ? Home()
+                    : MainScreen();
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            })));
   }
+}

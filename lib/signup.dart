@@ -14,7 +14,7 @@ class _SignupState extends State<Signup> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   bool isPasswordVisible = true;
-  final formkey= GlobalKey<FormState>();
+  final formkey = GlobalKey<FormState>();
 
   String? emailError;
   String? passwordError;
@@ -33,18 +33,16 @@ class _SignupState extends State<Signup> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade400, Colors.green.shade400],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomRight
-          ),
-          
+              colors: [Colors.blue.shade400, Colors.green.shade400],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomRight),
         ),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(30.0),
             child: SingleChildScrollView(
               child: Form(
-              key: formkey,
+                key: formkey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -59,38 +57,37 @@ class _SignupState extends State<Signup> {
                     ),
                     SizedBox(height: 60.0),
                     TextFormField(
-                      controller: _nameController,
-                      keyboardType: TextInputType.text,
-                      decoration: const InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                        controller: _nameController,
+                        keyboardType: TextInputType.text,
+                        decoration: const InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          labelText: 'Enter your name',
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          prefixIcon: Icon(Icons.person_2, size: 30.0),
+                          prefixIconColor: Colors.green,
                         ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        labelText: 'Enter your name',
-                        labelStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        prefixIcon: Icon(Icons.person_2, size: 30.0),
-                        prefixIconColor: Colors.green,
-                      ),
-                      validator: (value) {
-                       if (value!.isEmpty || !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
-                          return 'Enter your name';
-                        }
-                        else{
-                          return null;
-                        }
-                      }
-                    ),
+                        validator: (value) {
+                          if (value!.isEmpty ||
+                              !RegExp(r'^[a-z A-Z]+$').hasMatch(value)) {
+                            return 'Enter your name';
+                          } else {
+                            return null;
+                          }
+                        }),
                     SizedBox(height: 30.0),
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
-                        focusedBorder:  OutlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
                         ),
                         filled: true,
@@ -102,13 +99,15 @@ class _SignupState extends State<Signup> {
                           fontWeight: FontWeight.w500,
                         ),
                         prefixIcon: Icon(Icons.email, size: 30.0),
-                        prefixIconColor: Colors.green, 
-                         ),
+                        prefixIconColor: Colors.green,
+                      ),
                       validator: (value) {
-                        if (value!.isEmpty ) {
+                        if (value!.isEmpty) {
                           return 'Enter an email';
                         }
-                        if(!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)){
+                        if (!RegExp(
+                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                            .hasMatch(value)) {
                           return 'Enter a valid email';
                         }
                         return null;
@@ -138,19 +137,26 @@ class _SignupState extends State<Signup> {
                         focusedErrorBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                         ),
-                        prefixIcon: Icon(Icons.lock, color: Colors.green, size: 30.0,),
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: Colors.green,
+                          size: 30.0,
+                        ),
                         suffixIcon: IconButton(
-                          icon: Icon(isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                          icon: Icon(isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off),
                           onPressed: toggleVisibility,
                         ),
                       ),
                       validator: (value) {
-                        if (value!.isEmpty ) {
+                        if (value!.isEmpty) {
                           return 'Please enter a password';
                         }
-                        if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*]).{8,}$').hasMatch(value)){
-                    return 'Password must be 8 characters with upper, lower, number, and special char';
-                    
+                        if (!RegExp(
+                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$%^&*]).{8,}$')
+                            .hasMatch(value)) {
+                          return 'Password must be 8 characters with upper, lower, number, and special char';
                         }
                         return null;
                       },
@@ -162,22 +168,24 @@ class _SignupState extends State<Signup> {
                         backgroundColor: Colors.white,
                         minimumSize: Size(300.0, 50.0),
                       ),
-                      onPressed: ()  async {
-                        if(formkey.currentState!.validate()){
-                            Navigator.pushNamed(context, '/home');
+                      onPressed: () async {
+                        if (formkey.currentState!.validate()) {
+                          Navigator.pushNamed(context, '/home');
                         }
                         final auth = FirebaseAuth.instance;
-                             await auth.createUserWithEmailAndPassword(
-                              email: _emailController.text,
-                               password: _passwordController.text,
-                             );
+                        await auth.createUserWithEmailAndPassword(
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        );
                       },
                       child: const Text(
                         'Sign Up',
                         style: TextStyle(fontSize: 20.0),
                       ),
                     ),
-                    SizedBox(height: 30.0,),
+                    SizedBox(
+                      height: 30.0,
+                    ),
                     const Center(
                       child: Text(
                         '-- Or create your account with --',
@@ -231,9 +239,8 @@ class _SignupState extends State<Signup> {
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
       User? user = userCredential.user;
-      if (user != null) {
-        Navigator.pushNamed(context, '/home');
-      }
+      Navigator.pushNamed(context, '/home');
+
       print(user?.displayName);
     } catch (e) {
       print('Error logging in: $e');
