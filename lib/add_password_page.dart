@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:password_manager/constants.dart';
@@ -19,16 +20,15 @@ class AddPasswordPage extends StatelessWidget {
     );
   }
 }
+
 class PasswordFields extends StatefulWidget {
-  String ?id;
+  String? id;
   final String title;
   final String username;
   final String password;
 
-  PasswordFields({this.title = '', 
-  this.username = '', 
-  this.password = '',
-   this.id=''});
+  PasswordFields(
+      {this.title = '', this.username = '', this.password = '', this.id = ''});
 
   @override
   State<PasswordFields> createState() => _PasswordFieldsState();
@@ -40,10 +40,10 @@ class _PasswordFieldsState extends State<PasswordFields> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool showProgressIndicator = false;
-  bool isobscure=  true;
-  void hidevisibility(){
+  bool isobscure = true;
+  void hidevisibility() {
     setState(() {
-      isobscure=!isobscure;
+      isobscure = !isobscure;
     });
   }
 
@@ -75,6 +75,7 @@ class _PasswordFieldsState extends State<PasswordFields> {
       'title': titleController.text,
       'username': emailController.text,
       'password': passwordController.text,
+      'email': FirebaseAuth.instance.currentUser!.email
     };
 
     try {
@@ -101,17 +102,17 @@ class _PasswordFieldsState extends State<PasswordFields> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue.shade400, Colors.green.shade400],
-            begin: Alignment.topCenter,
-          ),
-          
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue.shade400, Colors.green.shade400],
+          begin: Alignment.topCenter,
         ),
+      ),
       padding: EdgeInsets.all(20.0),
       child: Form(
         key: _formKey,
@@ -128,7 +129,9 @@ class _PasswordFieldsState extends State<PasswordFields> {
                 ),
               ),
             ),
-            const SizedBox(height: 25.0,),
+            const SizedBox(
+              height: 25.0,
+            ),
             TextField(
               controller: emailController,
               decoration: const InputDecoration(
@@ -139,20 +142,28 @@ class _PasswordFieldsState extends State<PasswordFields> {
                 ),
               ),
             ),
-            const SizedBox(height: 25.0,),
+            const SizedBox(
+              height: 25.0,
+            ),
             TextField(
               controller: passwordController,
               obscureText: isobscure,
-              decoration:  InputDecoration(
-                labelText: 'Enter your password',
-                labelStyle: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 18.0,
-                ),
-                suffixIcon: IconButton(onPressed: hidevisibility, icon:Icon(isobscure?Icons.visibility:Icons.visibility_off),color: Colors.white,)
-              ),
+              decoration: InputDecoration(
+                  labelText: 'Enter your password',
+                  labelStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 18.0,
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: hidevisibility,
+                    icon: Icon(
+                        isobscure ? Icons.visibility : Icons.visibility_off),
+                    color: Colors.white,
+                  )),
             ),
-           const SizedBox(height: 25.0,),
+            const SizedBox(
+              height: 25.0,
+            ),
             ElevatedButton(
               onPressed: _saveDataToFirestore,
               child: Text('Save', style: buttonStyle),
@@ -164,4 +175,3 @@ class _PasswordFieldsState extends State<PasswordFields> {
     );
   }
 }
-

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,8 +20,9 @@ class _HomeState extends State<Home> {
   String correctPin = '1234';
   Map<String, bool> passwordVisibilityMap = {};
 
-// This function is used to edit the collection which user has saved 
-  void editData(String documentId, String title, String username, String password) {
+// This function is used to edit the collection which user has saved
+  void editData(
+      String documentId, String title, String username, String password) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -32,17 +35,21 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-  // Used to delete the data 
+
+  // Used to delete the data
   void deleteData(String documentID) {
     var collectionRef = FirebaseFirestore.instance.collection('passwords');
     collectionRef.doc(documentID).delete();
   }
+
   // This function is used see the password only when user enters the correct pin
-  void _togglePasswordVisibility(String documentId, BuildContext context) async {
+  void _togglePasswordVisibility(
+      String documentId, BuildContext context) async {
     final pin = await _showPinDialog(context);
     if (pin == correctPin) {
       setState(() {
-        passwordVisibilityMap[documentId] = !(passwordVisibilityMap[documentId] ?? false);
+        passwordVisibilityMap[documentId] =
+            !(passwordVisibilityMap[documentId] ?? false);
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -72,18 +79,38 @@ class _HomeState extends State<Home> {
         ),
         padding: EdgeInsets.all(12.0),
         child: StreamBuilder(
-          // Used to get the data of the user who has currently logged in 
-          stream: FirebaseFirestore.instance.collection("passwords").where("userId", isEqualTo: userId?.uid).snapshots(),
+          // Used to get the data of the user who has currently logged in
+          stream: userId != null
+              ? FirebaseFirestore.instance
+                  .collection("passwords")
+                  .where('email', isEqualTo: userId!.email)
+                  .snapshots()
+              : Stream.empty(),
           builder: (context, snapshot) {
             try {
               if (snapshot.hasError) {
+                log("Error is reading data");
                 return const Text('Error in reading data');
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
+                // log(FirebaseAuth.instance.currentUser.email);
+                log('loading...');
+                print(FirebaseAuth.instance.currentUser);
+                return Center(
+                    child: CircularProgressIndicator(
+                  color: Colors.amber,
+                ));
               }
               if (!snapshot.hasData || snapshot.data == null) {
-                return Text('No data found');
+                return Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.transparent,
+                  child: Text(
+                    'No data found',
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                );
               }
 
               var docs = snapshot.data!.docs;
@@ -112,8 +139,10 @@ class _HomeState extends State<Home> {
                         ),
                         SizedBox(height: 15.0),
                         TextFormField(
-                          obscureText: !(passwordVisibilityMap[docs[index].id] ?? false),
-                          controller: TextEditingController(text: docs[index]['password']),
+                          obscureText:
+                              !(passwordVisibilityMap[docs[index].id] ?? false),
+                          controller: TextEditingController(
+                              text: docs[index]['password']),
                           style: usernamestyle,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
@@ -121,11 +150,14 @@ class _HomeState extends State<Home> {
                             suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
-                                  _togglePasswordVisibility(docs[index].id, context);
+                                  _togglePasswordVisibility(
+                                      docs[index].id, context);
                                 });
                               },
                               icon: Icon(
-                                isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                                isPasswordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                                 color: Colors.green,
                               ),
                             ),
@@ -137,7 +169,11 @@ class _HomeState extends State<Home> {
                             GestureDetector(
                               child: Icon(Icons.edit, color: Colors.blue),
                               onTap: () {
-                                editData(docs[index].id, docs[index]['title'], docs[index]['username'], docs[index]['password']);
+                                editData(
+                                    docs[index].id,
+                                    docs[index]['title'],
+                                    docs[index]['username'],
+                                    docs[index]['password']);
                               },
                             ),
                             SizedBox(width: 16.0),
@@ -162,7 +198,7 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, '/password'),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
         shape: const CircleBorder(eccentricity: 0.0),
         child: const Icon(
           Icons.add,
@@ -172,6 +208,7 @@ class _HomeState extends State<Home> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+
   // It is used to show  a dialog box when user tries to see the password
   Future<String?> _showPinDialog(BuildContext context) async {
     TextEditingController pinController = TextEditingController();
