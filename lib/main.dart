@@ -9,15 +9,15 @@ import 'package:password_manager/security_pin.dart';
 import 'package:password_manager/signup.dart';
 import 'package:password_manager/home.dart';
 import 'package:get/get.dart';
+import 'package:password_manager/verification_email.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +29,16 @@ class MyApp extends StatelessWidget {
           '/home': (context) => const Home(),
           '/password': (context) => const AddPasswordPage(),
           '/reset': (context) => const ResetPassword(),
-          '/mpin': (context) => const Security_Pin()
+          '/mpin': (context) => const Security_Pin(),
+          '/getverification':(context)=> VerifyEmailAddress(),
         },
         home: FutureBuilder(
             future: Firebase.initializeApp(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return FirebaseAuth.instance.currentUser != null
-                    ? Home()
-                    : MainScreen();
+                    ? const Home()
+                    :const MainScreen();
               } else {
                 return const Center(
                   child: CircularProgressIndicator(),

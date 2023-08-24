@@ -71,6 +71,7 @@ class _HomeState extends State<Home> {
       drawer: NavBar(),
       body: Container(
         height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.blue.shade400, Colors.green.shade400],
@@ -96,7 +97,7 @@ class _HomeState extends State<Home> {
                 // log(FirebaseAuth.instance.currentUser.email);
                 log('loading...');
                 print(FirebaseAuth.instance.currentUser);
-                return Center(
+                return const Center(
                     child: CircularProgressIndicator(
                   color: Colors.amber,
                 ));
@@ -106,7 +107,7 @@ class _HomeState extends State<Home> {
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   color: Colors.transparent,
-                  child: Text(
+                  child:const  Text(
                     'No data found',
                     style: TextStyle(fontSize: 20.0),
                   ),

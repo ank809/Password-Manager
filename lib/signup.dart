@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:password_manager/home.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -14,11 +18,50 @@ class _SignupState extends State<Signup> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   bool isPasswordVisible = true;
+  bool isEmailVerified= false;
+  // Timer? timer;
   final formkey = GlobalKey<FormState>();
 
   String? emailError;
   String? passwordError;
   String? nameError;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   isEmailVerified= FirebaseAuth.instance.currentUser!.emailVerified;
+
+  //   if(!isEmailVerified){
+  //     sendVerificationEmail();
+  //   timer= Timer.periodic(
+  //     Duration(seconds: 3),
+  //     (_)=> checkEmailVerified(),
+  //   );
+  //   }else {
+  //     Navigator.pushNamed(context, '/home');
+  //   }
+  // }
+  // void dispose(){
+  //   timer?.cancel();
+  //   super.dispose();
+  // }
+  // Future checkEmailVerified() async{
+  //   await FirebaseAuth.instance.currentUser!.reload();
+  //   setState(() {
+  //     isEmailVerified=FirebaseAuth.instance.currentUser!.emailVerified;
+  //     if(isEmailVerified){
+  //       timer?.cancel();
+  //     }
+  //   });
+  // }
+  // Future sendVerificationEmail () async {
+  //   try{
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   await user!.sendEmailVerification();
+  //   }catch(e){
+  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('')));
+  //   }
+  // }
 
   void toggleVisibility() {
     setState(() {
@@ -27,8 +70,8 @@ class _SignupState extends State<Signup> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context){ 
+    return  isEmailVerified? Home(): Scaffold(
       body: Container(
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
@@ -137,7 +180,7 @@ class _SignupState extends State<Signup> {
                         focusedErrorBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red),
                         ),
-                        prefixIcon: Icon(
+                        prefixIcon:const  Icon(
                           Icons.lock,
                           color: Colors.green,
                           size: 30.0,
@@ -170,20 +213,34 @@ class _SignupState extends State<Signup> {
                       ),
                       onPressed: () async {
                         if (formkey.currentState!.validate()) {
-                          Navigator.pushNamed(context, '/home');
+                          Navigator.pushNamed(context, '/getverification');
                         }
                         final auth = FirebaseAuth.instance;
+                        try{
                         await auth.createUserWithEmailAndPassword(
                           email: _emailController.text,
                           password: _passwordController.text,
                         );
-                      },
+                      final user = auth.currentUser;
+                      if (user != null) {
+                        // await sendVerificationEmail(); // Call the sendVerificationEmail function
+                        ScaffoldMessenger.of(context).showSnackBar(
+                         SnackBar(content: Text('Verification email sent')),
+                      );
+                    }
+                    }
+                    catch(e){
+                           ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error: $e')),
+                      );
+                     }
+                        },
                       child: const Text(
                         'Sign Up',
                         style: TextStyle(fontSize: 20.0),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30.0,
                     ),
                     const Center(
@@ -246,4 +303,4 @@ class _SignupState extends State<Signup> {
       print('Error logging in: $e');
     }
   }
-}
+  }
