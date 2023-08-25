@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:password_manager/home.dart';
+import 'package:password_manager/verification_email.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -26,42 +28,6 @@ class _SignupState extends State<Signup> {
   String? passwordError;
   String? nameError;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   isEmailVerified= FirebaseAuth.instance.currentUser!.emailVerified;
-
-  //   if(!isEmailVerified){
-  //     sendVerificationEmail();
-  //   timer= Timer.periodic(
-  //     Duration(seconds: 3),
-  //     (_)=> checkEmailVerified(),
-  //   );
-  //   }else {
-  //     Navigator.pushNamed(context, '/home');
-  //   }
-  // }
-  // void dispose(){
-  //   timer?.cancel();
-  //   super.dispose();
-  // }
-  // Future checkEmailVerified() async{
-  //   await FirebaseAuth.instance.currentUser!.reload();
-  //   setState(() {
-  //     isEmailVerified=FirebaseAuth.instance.currentUser!.emailVerified;
-  //     if(isEmailVerified){
-  //       timer?.cancel();
-  //     }
-  //   });
-  // }
-  // Future sendVerificationEmail () async {
-  //   try{
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   await user!.sendEmailVerification();
-  //   }catch(e){
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('')));
-  //   }
-  // }
 
   void toggleVisibility() {
     setState(() {
@@ -212,15 +178,13 @@ class _SignupState extends State<Signup> {
                         minimumSize: Size(300.0, 50.0),
                       ),
                       onPressed: () async {
-                        if (formkey.currentState!.validate()) {
-                          Navigator.pushNamed(context, '/getverification');
-                        }
+                        if (formkey.currentState!.validate()) { }
                         final auth = FirebaseAuth.instance;
                         try{
                         await auth.createUserWithEmailAndPassword(
                           email: _emailController.text,
                           password: _passwordController.text,
-                        );
+                        ).then((value) => Get.off(VerifyEmailAddress()));
                       final user = auth.currentUser;
                       if (user != null) {
                         // await sendVerificationEmail(); // Call the sendVerificationEmail function

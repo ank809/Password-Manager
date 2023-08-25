@@ -149,18 +149,19 @@ class _HomeState extends State<Home> {
                             contentPadding: EdgeInsets.zero,
                             labelText: 'Password',
                             suffixIcon: IconButton(
+                              icon: Icon(
+                                   passwordVisibilityMap[docs[index].id] ?? false
+                                    ?   Icons.remove_red_eye
+                                    : Icons.visibility_off,
+                                color: Colors.green,
+                              ),
                               onPressed: () {
                                 setState(() {
                                   _togglePasswordVisibility(
                                       docs[index].id, context);
                                 });
                               },
-                              icon: Icon(
-                                isPasswordVisible
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                                color: Colors.green,
-                              ),
+                              
                             ),
                           ),
                         ),
